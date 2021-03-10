@@ -20,7 +20,7 @@ end
 %%%%
 Re.method = {};
 sign_plot = 0;      % Choosing whether plot the offline processing results
-sign_write = 0;      % Choosing whether generate the .wav file of results
+sign_write = 1;      % Choosing whether generate the .wav file of results
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 if(ismember('DSB',method) || ismember('ALL',method))
     SetupStruc.DSB.K = 512;                            %%%%% Adjustable coeficient 'K'
@@ -285,6 +285,20 @@ if(ismember('OverIVA',method) || ismember('ALL',method))
     end
     if(sign_write == 1)
         autoWrite(Re.OverIVA.S,SetupStruc.fs,'OverIVA');
+    end    
+end
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+if(ismember('OverILRMA',method) || ismember('ALL',method))
+    SetupStruc.OverILRMA.K = 2048;                            
+    SetupStruc.OverILRMA.hop = round(SetupStruc.OverILRMA.K/4);        
+    Transfer = Cal_transfer(SetupStruc,'OverILRMA');
+    [Re.OverILRMA.S,Re.OverILRMA.W,SetupStruc] = Process_OverILRMA(s,Transfer,SetupStruc);
+    Re.method = [Re.method;'OverILRMA'];
+    if(sign_plot == 1)
+        autoPlot(Re.OverILRMA.S,'OverILRMA',SetupStruc.fs);
+    end
+    if(sign_write == 1)
+        autoWrite(Re.OverILRMA.S,SetupStruc.fs,'OverILRMA');
     end    
 end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
